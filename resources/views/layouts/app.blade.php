@@ -7,30 +7,41 @@
 
         <title>{{ config('app.name', 'Laravel') }}</title>
 
-        <!-- Fonts -->
-        <link rel="preconnect" href="https://fonts.bunny.net">
-        <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
-
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
-    <body class="font-sans antialiased">
-        <div class="min-h-screen bg-gray-100">
-            @include('layouts.navigation')
+    <body class="font-sans antialiased text-gray-800 bg-gray-50 dark:bg-gray-900 dark:text-gray-400">
+        <div x-data="{ sidebarExpanded: false, sidebarHovered: false, mobileSidebarOpen: false }" class="min-h-screen xl:flex">
+            
+            <!-- Sidebar -->
+            @include('layouts.sidebar')
 
-            <!-- Page Heading -->
-            @isset($header)
-                <header class="bg-white shadow">
-                    <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                        {{ $header }}
-                    </div>
-                </header>
-            @endisset
+            <!-- Backdrop for Mobile -->
+            <div x-show="mobileSidebarOpen" 
+                 @click="mobileSidebarOpen = false" 
+                 class="fixed inset-0 z-40 bg-black/50 lg:hidden">
+            </div>
 
-            <!-- Page Content -->
-            <main>
-                {{ $slot }}
-            </main>
+            <!-- Content Area -->
+            <div
+                class="flex-1 transition-all duration-300 ease-in-out"
+                :class="[sidebarExpanded || sidebarHovered ? 'lg:ml-[290px]' : 'lg:ml-[90px]']"
+            >
+                <!-- Header -->
+                @include('layouts.header')
+
+                <!-- Main Content -->
+                <main class="p-4 mx-auto max-w-(--breakpoint-2xl) md:p-6">
+                    {{ $slot }}
+                </main>
+
+                <!-- Footer -->
+                <footer class="p-4 mx-auto max-w-(--breakpoint-2xl) md:p-6 pt-0">
+                    <p class="text-sm text-center text-gray-500 dark:text-gray-400">
+                        Room Booking System &copy; {{ date('Y') }}
+                    </p>
+                </footer>
+            </div>
         </div>
     </body>
 </html>
