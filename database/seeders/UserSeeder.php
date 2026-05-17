@@ -20,6 +20,7 @@ class UserSeeder extends Seeder
             'password' => Hash::make('password'),
             'role' => 'admin',
             'phone_number' => '081234567890',
+            'is_active' => true,
         ]);
 
         User::create([
@@ -28,7 +29,8 @@ class UserSeeder extends Seeder
             'password' => Hash::make('password'),
             'role' => 'admin',
             'phone_number' => '081234567890',
-        ]);
+            'is_active' => true,
+        ]); 
 
         // Guru 1
         User::create([
@@ -37,6 +39,7 @@ class UserSeeder extends Seeder
             'password' => Hash::make('password'),
             'role' => 'guru',
             'phone_number' => '081298765432',
+            'is_active' => true,
         ]);
 
         // Guru 2
@@ -46,6 +49,7 @@ class UserSeeder extends Seeder
             'password' => Hash::make('password'),
             'role' => 'guru',
             'phone_number' => '081211223344',
+            'is_active' => true,
         ]);
     }
 }

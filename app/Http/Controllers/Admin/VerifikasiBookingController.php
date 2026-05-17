@@ -57,7 +57,11 @@ class VerifikasiBookingController extends Controller
             return back()->with('error', 'Tidak bisa disetujui, waktu bentrok dengan booking lain.');
         }
 
-        $booking->update(['status' => 'approved']);
+        $booking->update([
+            'status' => 'approved',
+            'verified_by' => auth()->id(),
+            'verified_at' => now(),
+        ]);
 
         return back()->with('success', 'Booking berhasil disetujui.');
     }
@@ -70,7 +74,11 @@ class VerifikasiBookingController extends Controller
             return back()->with('error', 'Booking ini sudah diproses sebelumnya.');
         }
 
-        $booking->update(['status' => 'rejected']);
+        $booking->update([
+            'status' => 'rejected',
+            'verified_by' => auth()->id(),
+            'verified_at' => now(),
+        ]);
 
         return back()->with('success', 'Booking berhasil ditolak.');
     }

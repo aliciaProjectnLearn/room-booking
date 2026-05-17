@@ -139,6 +139,79 @@
               </li>
             </ul>
           </div>
+          
+          <!-- Laporan Group -->
+          <div class="mt-4">
+            <h2
+              class="mb-4 text-xs uppercase flex leading-[20px] text-gray-400"
+              :class="!sidebarExpanded && !sidebarHovered ? 'lg:justify-center' : 'justify-start'"
+            >
+              <span x-show="sidebarExpanded || sidebarHovered || mobileSidebarOpen" 
+                    x-transition:enter="transition ease-out duration-300"
+                    x-transition:enter-start="opacity-0"
+                    x-transition:enter-end="opacity-100"
+                    class="whitespace-nowrap">Laporan & Pengaturan</span>
+              <span x-show="!(sidebarExpanded || sidebarHovered || mobileSidebarOpen)"
+                    x-transition:enter="transition ease-out duration-300"
+                    x-transition:enter-start="opacity-0"
+                    x-transition:enter-end="opacity-100">...</span>
+            </h2>
+            <ul class="flex flex-col gap-4">
+              <!-- Laporan Penggunaan -->
+              <li>
+                <a href="{{ route('admin.reports.index') }}"
+                  class="menu-item group {{ request()->routeIs('admin.reports.*') ? 'menu-item-active' : 'menu-item-inactive' }} flex items-center overflow-hidden"
+                >
+                  <span class="shrink-0 {{ request()->routeIs('admin.reports.*') ? 'menu-item-icon-active' : 'menu-item-icon-inactive' }}">
+                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                  </span>
+                  <span x-show="sidebarExpanded || sidebarHovered || mobileSidebarOpen" 
+                        x-transition:enter="transition ease-out duration-300"
+                        x-transition:enter-start="opacity-0 -translate-x-4"
+                        x-transition:enter-end="opacity-100 translate-x-0"
+                        class="menu-item-text whitespace-nowrap ml-3">Laporan Penggunaan</span>
+                </a>
+              </li>
+
+              <!-- Manajemen User -->
+              <li>
+                <a href="{{ route('admin.users.index') }}"
+                  class="menu-item group {{ request()->routeIs('admin.users.*') ? 'menu-item-active' : 'menu-item-inactive' }} flex items-center overflow-hidden"
+                >
+                  <span class="shrink-0 {{ request()->routeIs('admin.users.*') ? 'menu-item-icon-active' : 'menu-item-icon-inactive' }}">
+                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                    </svg>
+                  </span>
+                  <span x-show="sidebarExpanded || sidebarHovered || mobileSidebarOpen" 
+                        x-transition:enter="transition ease-out duration-300"
+                        x-transition:enter-start="opacity-0 -translate-x-4"
+                        x-transition:enter-end="opacity-100 translate-x-0"
+                        class="menu-item-text whitespace-nowrap ml-3">Manajemen User</span>
+                </a>
+              </li>
+
+              <!-- Manajemen Ruang -->
+              <li>
+                <a href="{{ route('admin.rooms.index') }}"
+                  class="menu-item group {{ request()->routeIs('admin.rooms.*') ? 'menu-item-active' : 'menu-item-inactive' }} flex items-center overflow-hidden"
+                >
+                  <span class="shrink-0 {{ request()->routeIs('admin.rooms.*') ? 'menu-item-icon-active' : 'menu-item-icon-inactive' }}">
+                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                    </svg>
+                  </span>
+                  <span x-show="sidebarExpanded || sidebarHovered || mobileSidebarOpen" 
+                        x-transition:enter="transition ease-out duration-300"
+                        x-transition:enter-start="opacity-0 -translate-x-4"
+                        x-transition:enter-end="opacity-100 translate-x-0"
+                        class="menu-item-text whitespace-nowrap ml-3">Manajemen Ruang</span>
+                </a>
+              </li>
+            </ul>
+          </div>
         </div>
       </nav>
     </div>
