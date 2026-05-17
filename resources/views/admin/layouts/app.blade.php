@@ -28,7 +28,7 @@
         <!-- Content Area -->
         <div
             class="flex-1 transition-all duration-300 ease-in-out"
-            :class="[sidebarExpanded || sidebarHovered ? 'lg:ml-[290px]' : 'lg:ml-[90px]']"
+            :class="[sidebarExpanded || sidebarHovered ? 'lg:ml-[250px]' : 'lg:ml-[90px]']"
         >
             <!-- Header -->
             @include('layouts.header')

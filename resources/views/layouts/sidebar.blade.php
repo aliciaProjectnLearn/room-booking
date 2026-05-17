@@ -1,25 +1,22 @@
 <aside
     class="fixed mt-16 flex flex-col lg:mt-0 top-0 px-5 left-0 bg-white dark:bg-gray-900 dark:border-gray-800 text-gray-900 h-screen transition-all duration-300 ease-in-out z-[99999] border-r border-gray-200"
     :class="[
-        sidebarExpanded || sidebarHovered ? 'lg:w-[290px]' : 'lg:w-[90px]',
-        mobileSidebarOpen ? 'translate-x-0 w-[290px]' : '-translate-x-full lg:translate-x-0'
+        sidebarExpanded || sidebarHovered ? 'lg:w-[250px]' : 'lg:w-[90px]',
+        mobileSidebarOpen ? 'translate-x-0 w-[250px]' : '-translate-x-full lg:translate-x-0'
     ]"
     @mouseenter="!sidebarExpanded && (sidebarHovered = true)"
     @mouseleave="sidebarHovered = false"
 >
     <!-- Logo area -->
-    <div
-      class="py-8 flex items-center transition-all duration-300"
-      :class="!sidebarExpanded && !sidebarHovered ? 'lg:justify-center' : 'justify-start'"
-    >
-      <a href="/">
-        <div class="flex items-center overflow-hidden">
+    <div class="py-6 flex items-center justify-center w-full transition-all duration-300">
+      <a href="/" class="flex justify-center w-full">
+        <div class="flex items-center justify-center overflow-hidden">
             <img
               x-show="sidebarExpanded || sidebarHovered || mobileSidebarOpen"
               x-transition:enter="transition ease-out duration-300"
               x-transition:enter-start="opacity-0"
               x-transition:enter-end="opacity-100"
-              class="dark:hidden w-32"
+              class="dark:hidden w-20 object-contain"
               src="{{ asset('images/logo/logo_smk.png') }}"
               alt="Logo"
             />
@@ -28,7 +25,7 @@
               x-transition:enter="transition ease-out duration-300"
               x-transition:enter-start="opacity-0"
               x-transition:enter-end="opacity-100"
-              class="hidden dark:block w-32"
+              class="hidden dark:block w-20 object-contain"
               src="{{ asset('images/logo/logo_smk.png') }}"
               alt="Logo"
             />
@@ -39,7 +36,7 @@
               x-transition:enter-end="opacity-100"
               src="{{ asset('images/logo/logo_smk.png') }}"
               alt="Logo"
-              class="w-8"
+              class="w-8 object-contain"
             />
         </div>
       </a>

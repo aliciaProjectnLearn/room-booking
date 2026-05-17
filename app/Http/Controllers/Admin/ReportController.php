@@ -153,6 +153,21 @@ class ReportController extends Controller
         $rooms = Room::orderBy('name')->get();
         $users = User::orderBy('name')->get();
 
-        return view('admin.reports.index', compact('bookings', 'summary', 'rooms', 'users', 'request'));
+        // Calculate Room Usage dynamically based on active filters
+        $usageCounts = (clone $query)
+            ->reorder()
+            ->selectRaw('room_id, count(*) as total')
+            ->groupBy('room_id')
+            ->pluck('total', 'room_id')
+            ->toArray();
+
+        $roomUsage = $rooms->map(function($room) use ($usageCounts) {
+            return [
+                'name' => $room->name,
+                'count' => $usageCounts[$room->id] ?? 0,
+            ];
+        });
+
+        return view('admin.reports.index', compact('bookings', 'summary', 'rooms', 'users', 'roomUsage', 'request'));
     }
 }
