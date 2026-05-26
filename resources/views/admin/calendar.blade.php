@@ -81,9 +81,9 @@
     </div>
 
     <!-- Calendar Card -->
-    <div class="w-full max-w-full rounded-xl border border-gray-200 bg-white shadow-theme-md dark:border-gray-800 dark:bg-gray-900">
-        <div class="p-4 md:p-6 xl:p-9">
-            <div id="calendar" class="custom-calendar"></div>
+    <div class="w-full max-w-full rounded-2xl border border-gray-100 bg-white/70 backdrop-blur-lg shadow-xl shadow-gray-200/50 dark:border-gray-800 dark:bg-gray-900/80">
+        <div class="p-5 md:p-8 overflow-x-auto custom-scrollbar">
+            <div id="calendar" class="custom-calendar font-sans min-w-[800px]"></div>
         </div>
     </div>
 
@@ -165,12 +165,17 @@
                     let colorClass = `fc-bg-${level.toLowerCase()}`;
                     if(colorClass === 'fc-bg-danger') colorClass = 'fc-bg-error'; // handle mapping
 
+                    let dotColorClass = 'bg-brand-500';
+                    if(level === 'Success') dotColorClass = 'bg-success-500';
+                    else if(level === 'Warning') dotColorClass = 'bg-warning-500';
+                    else if(level === 'Danger') dotColorClass = 'bg-error-500';
+
                     return {
                         html: `
-                        <div class="event-fc-color flex fc-event-main ${colorClass} p-1 rounded-sm w-full">
-                            <div class="fc-daygrid-event-dot hidden"></div>
+                        <div class="flex items-center fc-event-main ${colorClass} px-2.5 py-1.5 rounded-lg w-full transition-all duration-200 hover:shadow-md hover:scale-[1.02] border border-transparent hover:border-gray-200/50 cursor-pointer">
+                            <div class="w-2 h-2 rounded-full mr-2 flex-shrink-0 ${dotColorClass}"></div>
                             <div class="fc-event-time hidden">${eventInfo.timeText}</div>
-                            <div class="fc-event-title font-medium truncate">${eventInfo.event.title}</div>
+                            <div class="fc-event-title font-semibold text-xs tracking-wide truncate">${eventInfo.event.title}</div>
                         </div>
                         `
                     };
@@ -268,15 +273,41 @@
 </script>
 
 <style>
-.fc .fc-toolbar-title { font-size: 1.25rem !important; font-weight: 600 !important; color: var(--color-gray-800); }
-.dark .fc .fc-toolbar-title { color: var(--color-white); }
-.fc-theme-standard .fc-scrollgrid { border-color: var(--color-gray-200); }
-.dark .fc-theme-standard .fc-scrollgrid { border-color: var(--color-gray-800); }
-.fc .fc-button-primary { background-color: var(--color-brand-500) !important; border-color: var(--color-brand-500) !important; }
-.fc .fc-button-primary:hover { background-color: var(--color-brand-600) !important; }
-.fc-bg-primary { background-color: var(--color-brand-50) !important; color: var(--color-brand-600) !important; border-left: 3px solid var(--color-brand-500); }
-.fc-bg-success { background-color: var(--color-success-50) !important; color: var(--color-success-600) !important; border-left: 3px solid var(--color-success-500); }
-.fc-bg-warning { background-color: var(--color-warning-50) !important; color: var(--color-warning-600) !important; border-left: 3px solid var(--color-warning-500); }
-.fc-bg-error { background-color: var(--color-error-50) !important; color: var(--color-error-600) !important; border-left: 3px solid var(--color-error-500); }
+/* Modern Toolbar */
+.fc .fc-toolbar-title { font-size: 1.5rem !important; font-weight: 700 !important; color: #1e293b; letter-spacing: -0.025em; }
+.dark .fc .fc-toolbar-title { color: #f8fafc; }
+.fc .fc-button-primary { background-color: #f1f5f9 !important; border-color: transparent !important; color: #475569 !important; border-radius: 0.75rem; font-weight: 600; text-transform: capitalize; padding: 0.5rem 1rem; transition: all 0.2s ease; box-shadow: none !important; }
+.fc .fc-button-primary:hover { background-color: #e2e8f0 !important; color: #0f172a !important; transform: translateY(-1px); }
+.fc .fc-button-primary:not(:disabled).fc-button-active, .fc .fc-button-primary:not(:disabled):active { background-color: #3b82f6 !important; color: white !important; border-color: transparent !important; box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.3) !important; }
+
+/* Grid and Borders */
+.fc-theme-standard th { border: none !important; padding: 1rem 0; text-transform: uppercase; font-size: 0.75rem; font-weight: 700; color: #64748b; }
+.fc-theme-standard td { border-color: #e2e8f0 !important; }
+.fc-theme-standard .fc-scrollgrid { border-color: #e2e8f0 !important; border: 1px solid #e2e8f0 !important; border-radius: 0.5rem; overflow: hidden; box-shadow: 0 0 0 1px #e2e8f0; }
+.dark .fc-theme-standard td { border-color: #475569 !important; }
+.dark .fc-theme-standard .fc-scrollgrid { border-color: #475569 !important; border: 1px solid #475569 !important; box-shadow: 0 0 0 1px #475569; }
+
+/* View Harness Fix for cut-off */
+.fc-view-harness { padding: 2px; }
+
+/* Days */
+.fc .fc-daygrid-day-number { padding: 0.5rem !important; font-weight: 600; color: #475569; border-radius: 50%; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; margin: 4px; transition: all 0.2s; }
+.fc .fc-daygrid-day-number:hover { background-color: #f1f5f9; color: #0f172a; }
+.fc .fc-day-today { background-color: #f8fafc !important; }
+.fc .fc-day-today .fc-daygrid-day-number { background-color: #3b82f6 !important; color: white !important; box-shadow: 0 4px 10px -2px rgba(59, 130, 246, 0.5); }
+.dark .fc .fc-daygrid-day-number { color: #cbd5e1; }
+.dark .fc .fc-day-today { background-color: #1e293b !important; }
+
+/* Events */
+.fc-event { border: none !important; background: transparent !important; }
+.fc-h-event { background: transparent !important; border: none !important; }
+.fc-bg-primary { background-color: #eff6ff !important; color: #1d4ed8 !important; }
+.fc-bg-success { background-color: #f0fdf4 !important; color: #15803d !important; }
+.fc-bg-warning { background-color: #fefce8 !important; color: #a16207 !important; }
+.fc-bg-error { background-color: #fef2f2 !important; color: #b91c1c !important; }
+.dark .fc-bg-primary { background-color: rgba(59, 130, 246, 0.2) !important; color: #93c5fd !important; }
+.dark .fc-bg-success { background-color: rgba(34, 197, 94, 0.2) !important; color: #86efac !important; }
+.dark .fc-bg-warning { background-color: rgba(234, 179, 8, 0.2) !important; color: #fde047 !important; }
+.dark .fc-bg-error { background-color: rgba(239, 68, 68, 0.2) !important; color: #fca5a5 !important; }
 </style>
 @endsection

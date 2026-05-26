@@ -40,7 +40,11 @@ class ResetBookingController extends Controller
             return back()->with('error', 'Hanya booking yang sudah disetujui yang bisa di-reset.');
         }
 
-        $booking->update(['status' => 'pending']);
+        $booking->update([
+            'status' => 'pending',
+            'verified_by' => null,
+            'verified_at' => null,
+        ]);
 
         return back()->with('success', 'Booking berhasil di-reset ke pending.');
     }

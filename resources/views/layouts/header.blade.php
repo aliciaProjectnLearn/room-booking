@@ -1,10 +1,10 @@
-<header class="sticky top-0 flex w-full bg-white border-gray-200 z-[99999] dark:border-gray-800 dark:bg-gray-900 lg:border-b">
+<header class="sticky top-0 flex w-full bg-blue-900 border-blue-900 z-[99999] dark:border-gray-800 dark:bg-gray-900 lg:border-b text-white">
     <div class="flex flex-col items-center justify-between grow lg:flex-row lg:px-6">
         <div class="flex items-center justify-between w-full gap-2 px-3 py-3 border-b border-gray-200 dark:border-gray-800 sm:gap-4 lg:justify-normal lg:border-b-0 lg:px-0 lg:py-4">
             
             <button @click="if(window.innerWidth >= 1024) { sidebarExpanded = !sidebarExpanded } else { mobileSidebarOpen = !mobileSidebarOpen }"
-                class="flex items-center justify-center w-10 h-10 text-gray-500 border-gray-200 rounded-lg z-[99999] dark:border-gray-800 dark:text-gray-400 lg:h-11 lg:w-11 lg:border"
-                :class="mobileSidebarOpen ? 'lg:bg-transparent dark:lg:bg-transparent bg-gray-100 dark:bg-gray-800' : ''">
+                class="flex items-center justify-center w-10 h-10 text-white/80 border-blue-800 rounded-lg z-[99999] dark:border-gray-800 dark:text-gray-400 lg:h-11 lg:w-11 lg:border hover:text-white"
+                :class="mobileSidebarOpen ? 'lg:bg-transparent dark:lg:bg-transparent bg-blue-800 dark:bg-gray-800' : ''">
                 
                 <svg x-show="mobileSidebarOpen" class="fill-current" width="24" height="24" viewBox="0 0 24 24" fill="none">
                     <path fill-rule="evenodd" clip-rule="evenodd" d="M6.21967 7.28131C5.92678 6.98841 5.92678 6.51354 6.21967 6.22065C6.51256 5.92775 6.98744 5.92775 7.28033 6.22065L11.999 10.9393L16.7176 6.22078C17.0105 5.92789 17.4854 5.92788 17.7782 6.22078C18.0711 6.51367 18.0711 6.98855 17.7782 7.28144L13.0597 12L17.7782 16.7186C18.0711 17.0115 18.0711 17.4863 17.7782 17.7792C17.4854 18.0721 17.0105 18.0721 16.7176 17.7792L11.999 13.0607L7.28033 17.7794C6.98744 18.0722 6.51256 18.0722 6.21967 17.7794C5.92678 17.4865 5.92678 17.0116 6.21967 16.7187L10.9384 12L6.21967 7.28131Z" fill=""/>
@@ -23,7 +23,7 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                             </svg>
                         </span>
-                        <input type="text" placeholder="Type to search..." class="w-full bg-transparent pl-9 pr-4 text-gray-800 border-0 focus:ring-0 dark:text-white xl:w-[300px]" />
+                        <input type="text" placeholder="Type to search..." class="w-full bg-transparent pl-9 pr-4 text-white placeholder-white/70 border-0 focus:ring-0 dark:text-white xl:w-[300px]" />
                     </div>
                 </form>
             </div>
@@ -34,8 +34,8 @@
             <div x-data="{ dropdownOpen: false }" class="relative">
                 <button @click="dropdownOpen = !dropdownOpen" class="flex items-center gap-4">
                     <span class="hidden text-right lg:block">
-                        <span class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ Auth::user()->name ?? 'User' }}</span>
-                        <span class="block text-xs text-gray-500 dark:text-gray-400">{{ Auth::user()->role ?? 'Admin' }}</span>
+                        <span class="block text-sm font-medium text-white dark:text-gray-300">{{ Auth::user()->name ?? 'User' }}</span>
+                        <span class="block text-xs text-blue-200 dark:text-gray-400">{{ Auth::user()->role ?? 'Admin' }}</span>
                     </span>
                     <span class="h-10 w-10 rounded-full border border-gray-200 dark:border-gray-800 bg-gray-100 flex items-center justify-center text-gray-500">
                         <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -46,7 +46,7 @@
 
                 <!-- Dropdown -->
                 <div x-show="dropdownOpen" @click.outside="dropdownOpen = false" x-transition 
-                     class="absolute right-0 mt-4 flex w-62.5 flex-col rounded-lg border border-gray-200 bg-white shadow-theme-md dark:border-gray-800 dark:bg-gray-900 w-48">
+                     class="absolute right-0 mt-4 flex flex-col rounded-lg border border-gray-200 bg-white shadow-theme-md dark:border-gray-800 dark:bg-gray-900 w-48 text-gray-800 dark:text-gray-200">
                     <ul class="flex flex-col gap-5 border-b border-gray-200 px-6 py-5 dark:border-gray-800">
                         <li>
                             <a href="{{ route('profile.edit') }}" class="flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-brand-500 lg:text-base">

@@ -12,20 +12,30 @@ class Booking extends Model
         'start_time',
         'end_time',
         'activity_name',
+        'participant_count',
         'status',
+        'verified_by',
+        'verified_at',
+        'reason',
     ];
 
     protected function casts(): array
     {
         return [
-            'start_time' => 'datetime',
-            'end_time'   => 'datetime',
+            'start_time'  => 'datetime',
+            'end_time'    => 'datetime',
+            'verified_at' => 'datetime',
         ];
     }
 
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function verifier()
+    {
+        return $this->belongsTo(User::class, 'verified_by');
     }
 
     public function room()

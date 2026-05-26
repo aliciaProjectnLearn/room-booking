@@ -15,14 +15,20 @@
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
     <body class="font-sans text-gray-900 antialiased">
-        <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-gray-100">
-            <div>
-                <a href="/">
-                    <x-application-logo class="w-20 h-20 fill-current text-gray-500" />
+        <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-blue-50 dark:bg-gray-900 relative overflow-hidden">
+            <!-- Decorative Dashboard-Aligned Background -->
+            <div class="absolute top-0 w-full h-1/2 bg-blue-900 dark:bg-gray-800 shadow-xl rounded-b-[100px] md:rounded-b-[200px]"></div>
+
+            <div class="z-10 text-center mb-8 mt-12 sm:mt-0">
+                <a href="/" class="flex flex-col items-center gap-3 group">
+                    <div class="bg-white p-4 rounded-full shadow-lg transform transition-transform duration-300 group-hover:scale-105">
+                        <x-application-logo class="w-16 h-16 fill-current text-blue-900" />
+                    </div>
+                    <h1 class="text-3xl font-bold text-white tracking-wide">Room Booking System</h1>
                 </a>
             </div>
 
-            <div class="w-full sm:max-w-md mt-6 px-6 py-4 bg-white shadow-md overflow-hidden sm:rounded-lg">
+            <div class="w-full sm:max-w-md px-8 py-10 bg-white/90 dark:bg-gray-900/90 backdrop-blur-md shadow-2xl overflow-hidden sm:rounded-3xl z-10 border border-white dark:border-gray-700">
                 {{ $slot }}
             </div>
         </div>
