@@ -1,5 +1,5 @@
 <aside
-    class="fixed mt-16 flex flex-col lg:mt-0 top-0 px-5 left-0 bg-white dark:bg-gray-900 dark:border-gray-800 text-gray-900 h-screen transition-all duration-300 ease-in-out z-[99999] border-r border-gray-200"
+    class="fixed mt-16 flex flex-col lg:mt-0 top-0 px-5 left-0 bg-blue-900 dark:bg-gray-900 dark:border-gray-800 text-white h-screen transition-all duration-300 ease-in-out z-[99999] border-r border-blue-900"
     :class="[
         sidebarExpanded || sidebarHovered ? 'lg:w-[250px]' : 'lg:w-[90px]',
         mobileSidebarOpen ? 'translate-x-0 w-[250px]' : '-translate-x-full lg:translate-x-0'
@@ -49,7 +49,7 @@
           <!-- Menu Group -->
           <div>
             <h2
-              class="mb-4 text-xs uppercase flex leading-[20px] text-gray-400"
+              class="mb-4 text-xs uppercase flex leading-[20px] text-blue-200"
               :class="!sidebarExpanded && !sidebarHovered ? 'lg:justify-center' : 'justify-start'"
             >
               <span x-show="sidebarExpanded || sidebarHovered || mobileSidebarOpen" 
@@ -67,6 +67,7 @@
               <li>
                 <a href="{{ route('admin.dashboard') }}"
                   class="menu-item group {{ request()->routeIs('admin.dashboard') ? 'menu-item-active' : 'menu-item-inactive' }} flex items-center overflow-hidden"
+                  :class="!(sidebarExpanded || sidebarHovered || mobileSidebarOpen) ? 'lg:justify-center lg:!px-0' : ''"
                 >
                   <span class="shrink-0 {{ request()->routeIs('admin.dashboard') ? 'menu-item-icon-active' : 'menu-item-icon-inactive' }}">
                     <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -85,6 +86,7 @@
               <li>
                 <a href="{{ route('admin.verifikasi.index') }}"
                   class="menu-item group {{ request()->routeIs('admin.verifikasi.*') ? 'menu-item-active' : 'menu-item-inactive' }} flex items-center overflow-hidden"
+                  :class="!(sidebarExpanded || sidebarHovered || mobileSidebarOpen) ? 'lg:justify-center lg:!px-0' : ''"
                 >
                   <span class="shrink-0 {{ request()->routeIs('admin.verifikasi.*') ? 'menu-item-icon-active' : 'menu-item-icon-inactive' }}">
                     <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -103,6 +105,7 @@
               <li>
                 <a href="{{ route('admin.reset.index') }}"
                   class="menu-item group {{ request()->routeIs('admin.reset.*') ? 'menu-item-active' : 'menu-item-inactive' }} flex items-center overflow-hidden"
+                  :class="!(sidebarExpanded || sidebarHovered || mobileSidebarOpen) ? 'lg:justify-center lg:!px-0' : ''"
                 >
                   <span class="shrink-0 {{ request()->routeIs('admin.reset.*') ? 'menu-item-icon-active' : 'menu-item-icon-inactive' }}">
                     <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -121,6 +124,7 @@
               <li>
                 <a href="/admin/calendar"
                   class="menu-item group {{ request()->is('admin/calendar') ? 'menu-item-active' : 'menu-item-inactive' }} flex items-center overflow-hidden"
+                  :class="!(sidebarExpanded || sidebarHovered || mobileSidebarOpen) ? 'lg:justify-center lg:!px-0' : ''"
                 >
                   <span class="shrink-0 {{ request()->is('admin/calendar') ? 'menu-item-icon-active' : 'menu-item-icon-inactive' }}">
                     <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -140,7 +144,7 @@
           <!-- Laporan Group -->
           <div class="mt-4">
             <h2
-              class="mb-4 text-xs uppercase flex leading-[20px] text-gray-400"
+              class="mb-4 text-xs uppercase flex leading-[20px] text-blue-200"
               :class="!sidebarExpanded && !sidebarHovered ? 'lg:justify-center' : 'justify-start'"
             >
               <span x-show="sidebarExpanded || sidebarHovered || mobileSidebarOpen" 
@@ -158,6 +162,7 @@
               <li>
                 <a href="{{ route('admin.reports.index') }}"
                   class="menu-item group {{ request()->routeIs('admin.reports.*') ? 'menu-item-active' : 'menu-item-inactive' }} flex items-center overflow-hidden"
+                  :class="!(sidebarExpanded || sidebarHovered || mobileSidebarOpen) ? 'lg:justify-center lg:!px-0' : ''"
                 >
                   <span class="shrink-0 {{ request()->routeIs('admin.reports.*') ? 'menu-item-icon-active' : 'menu-item-icon-inactive' }}">
                     <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -176,6 +181,7 @@
               <li>
                 <a href="{{ route('admin.users.index') }}"
                   class="menu-item group {{ request()->routeIs('admin.users.*') ? 'menu-item-active' : 'menu-item-inactive' }} flex items-center overflow-hidden"
+                  :class="!(sidebarExpanded || sidebarHovered || mobileSidebarOpen) ? 'lg:justify-center lg:!px-0' : ''"
                 >
                   <span class="shrink-0 {{ request()->routeIs('admin.users.*') ? 'menu-item-icon-active' : 'menu-item-icon-inactive' }}">
                     <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -194,6 +200,7 @@
               <li>
                 <a href="{{ route('admin.rooms.index') }}"
                   class="menu-item group {{ request()->routeIs('admin.rooms.*') ? 'menu-item-active' : 'menu-item-inactive' }} flex items-center overflow-hidden"
+                  :class="!(sidebarExpanded || sidebarHovered || mobileSidebarOpen) ? 'lg:justify-center lg:!px-0' : ''"
                 >
                   <span class="shrink-0 {{ request()->routeIs('admin.rooms.*') ? 'menu-item-icon-active' : 'menu-item-icon-inactive' }}">
                     <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
