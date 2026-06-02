@@ -33,28 +33,34 @@ class VerifikasiBookingController extends Controller
     }
 
     // Setujui booking
-    public function setujui(Booking $booking)
+    public function setujui(Booking $booking, \App\Services\WhatsAppService $waService)
     {
         // Pastikan booking masih pending
         if ($booking->status !== 'pending') {
             return back()->with('error', 'Booking ini sudah diproses sebelumnya.');
         }
 
-        // Cek apakah ada booking lain yang bentrok di ruangan & waktu yang sama
+        // Cek apakah ada booking lain yang bentrok di ruangan & waktu yang sama (dengan buffer 30 menit)
+        $start = \Carbon\Carbon::parse($booking->start_time);
+        $end = \Carbon\Carbon::parse($booking->end_time);
+
+        $bufferStart = $start->copy()->subMinutes(30);
+        $bufferEnd = $end->copy()->addMinutes(30);
+
         $bentrok = Booking::where('room_id', $booking->room_id)
             ->where('id', '!=', $booking->id)
             ->where('status', 'approved')
-            ->where(function ($query) use ($booking) {
-                $query->whereBetween('start_time', [$booking->start_time, $booking->end_time])
-                      ->orWhereBetween('end_time', [$booking->start_time, $booking->end_time])
-                      ->orWhere(function ($q) use ($booking) {
-                          $q->where('start_time', '<=', $booking->start_time)
-                            ->where('end_time', '>=', $booking->end_time);
+            ->where(function ($query) use ($bufferStart, $bufferEnd) {
+                $query->whereBetween('start_time', [$bufferStart, $bufferEnd])
+                      ->orWhereBetween('end_time', [$bufferStart, $bufferEnd])
+                      ->orWhere(function ($q) use ($bufferStart, $bufferEnd) {
+                          $q->where('start_time', '<=', $bufferStart)
+                            ->where('end_time', '>=', $bufferEnd);
                       });
             })->exists();
 
         if ($bentrok) {
-            return back()->with('error', 'Tidak bisa disetujui, waktu bentrok dengan booking lain.');
+            return back()->with('error', 'Tidak bisa disetujui, waktu bentrok atau kurang dari selang waktu 30 menit dengan jadwal lain.');
         }
 
         $booking->update([
@@ -62,6 +68,13 @@ class VerifikasiBookingController extends Controller
             'verified_by' => auth()->id(),
             'verified_at' => now(),
         ]);
+
+        // Send WhatsApp to Guru
+        if ($booking->user && $booking->user->phone_number) {
+            $guruPhone = $booking->user->phone_number;
+            $msgGuru = "Halo {$booking->user->name},\nSelamat, permohonan booking untuk ruang {$booking->room->name} pada {$start->format('d/m/Y H:i')} telah DISETUJUI oleh Admin.";
+            $waService->sendMessage($guruPhone, $msgGuru);
+        }
 
         return back()->with('success', 'Booking berhasil disetujui.');
     }

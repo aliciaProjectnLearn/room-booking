@@ -3,123 +3,162 @@
 @section('title', 'Jadwal Ruangan')
 
 @section('content')
-<div x-data="{
-    isModalOpen: false, 
-    modalMode: 'add', 
-    eventTitle: '', 
-    eventRoomId: '',
-    eventParticipants: '',
-    eventStartDate: '', 
-    eventEndDate: '',
-    selectedEventId: null,
-    rooms: {{ Js::from($rooms) }},
-    colors: ['Primary', 'Success', 'Warning', 'Danger'],
-    
-    get selectedRoom() {
-        return this.rooms.find(r => r.id == this.eventRoomId) || null;
-    },
-
-    get eventLevel() {
-        if (!this.selectedRoom) return 'Primary';
-        // Assign a color based on room id to make it consistent
-        const index = this.rooms.findIndex(r => r.id == this.eventRoomId);
-        return this.colors[index % this.colors.length];
-    },
-    
-    openModal(mode, start, end, title = '', roomId = '', participants = '', id = null) {
-        this.modalMode = mode;
-        // Format for datetime-local: YYYY-MM-DDTHH:mm
-        this.eventStartDate = start ? start.substring(0, 16) : '';
-        this.eventEndDate = end ? end.substring(0, 16) : this.eventStartDate;
-        
-        this.eventTitle = title;
-        this.eventRoomId = roomId;
-        this.eventParticipants = participants;
-        this.selectedEventId = id;
-        this.isModalOpen = true;
-    },
-    
-    closeModal() {
-        this.isModalOpen = false;
-        this.eventTitle = '';
-        this.eventRoomId = '';
-        this.eventParticipants = '';
-        this.eventStartDate = '';
-        this.eventEndDate = '';
-        this.selectedEventId = null;
-    },
-    
-    saveEvent() {
-        if (!this.eventTitle.trim()) {
-            Swal.fire({icon: 'error', title: 'Oops...', text: 'Judul kegiatan tidak boleh kosong!'});
-            return;
-        }
-        if (!this.eventRoomId) {
-            Swal.fire({icon: 'error', title: 'Oops...', text: 'Silakan pilih ruangan!'});
-            return;
-        }
-        if (this.selectedRoom && this.eventParticipants > this.selectedRoom.capacity) {
-            Swal.fire({icon: 'error', title: 'Oops...', text: 'Jumlah peserta melebihi kapasitas ruangan (' + this.selectedRoom.capacity + ')!'});
-            return;
-        }
-        if (!this.eventStartDate || !this.eventEndDate) {
-            Swal.fire({icon: 'error', title: 'Oops...', text: 'Waktu mulai dan selesai harus diisi!'});
-            return;
-        }
-        
-        let formData = {
-            title: this.eventTitle,
-            room_id: this.eventRoomId,
-            participants: this.eventParticipants,
-            start: this.eventStartDate,
-            end: this.eventEndDate,
-        };
-
-        let token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-
-        fetch('{{ route("calendar.store") }}', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': token
+<script>
+    document.addEventListener('alpine:init', () => {
+        Alpine.data('calendarData', () => ({
+            isModalOpen: false, 
+            modalMode: 'add', 
+            eventTitle: '', 
+            eventRoomId: '',
+            eventParticipants: '',
+            eventStartDate: '', 
+            eventEndDate: '',
+            selectedEventId: null,
+            isSubmitting: false,
+            rooms: {{ Js::from($rooms) }},
+            colors: ['Primary', 'Success', 'Warning', 'Danger'],
+            
+            get selectedRoom() {
+                return this.rooms.find(r => r.id == this.eventRoomId) || null;
             },
-            body: JSON.stringify(formData)
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.error || data.errors) {
-                let msg = data.error || Object.values(data.errors).join('\n');
-                Swal.fire({icon: 'error', title: 'Gagal', text: msg});
-            } else {
-                Swal.fire({icon: 'success', title: 'Berhasil', text: data.success || 'Booking berhasil diajukan!'});
+
+            get eventLevel() {
+                if (!this.selectedRoom) return 'Primary';
+                const index = this.rooms.findIndex(r => r.id == this.eventRoomId);
+                return this.colors[index % this.colors.length];
+            },
+            
+            openModal(mode, start, end, title = '', roomId = '', participants = '', id = null) {
+                this.modalMode = mode;
+                this.eventStartDate = start ? start.substring(0, 16) : '';
+                this.eventEndDate = end ? end.substring(0, 16) : this.eventStartDate;
                 
-                // Trigger Calendar event
-                const detail = {
-                    id: data.booking.id,
-                    title: formData.title,
-                    start: formData.start,
-                    end: formData.end,
-                    level: this.eventLevel,
-                    roomId: formData.room_id,
-                    participants: formData.participants,
-                    mode: this.modalMode
+                this.eventTitle = title;
+                this.eventRoomId = roomId;
+                this.eventParticipants = participants;
+                this.selectedEventId = id;
+                this.isModalOpen = true;
+            },
+            
+            closeModal() {
+                this.isModalOpen = false;
+                this.eventTitle = '';
+                this.eventRoomId = '';
+                this.eventParticipants = '';
+                this.eventStartDate = '';
+                this.eventEndDate = '';
+                this.selectedEventId = null;
+            },
+            
+            saveEvent() {
+                if (!this.eventTitle.trim()) {
+                    Swal.fire({icon: 'error', title: 'Oops...', text: 'Judul kegiatan tidak boleh kosong!'});
+                    return;
+                }
+                if (!this.eventRoomId) {
+                    Swal.fire({icon: 'error', title: 'Oops...', text: 'Silakan pilih ruangan!'});
+                    return;
+                }
+                if (this.selectedRoom && this.eventParticipants > this.selectedRoom.capacity) {
+                    Swal.fire({icon: 'error', title: 'Oops...', text: 'Jumlah peserta melebihi kapasitas ruangan (' + this.selectedRoom.capacity + ')!'});
+                    return;
+                }
+                if (!this.eventStartDate || !this.eventEndDate) {
+                    Swal.fire({icon: 'error', title: 'Oops...', text: 'Waktu mulai dan selesai harus diisi!'});
+                    return;
+                }
+                
+                this.isSubmitting = true;
+
+                Swal.fire({
+                    title: 'Mengirim Booking...',
+                    text: 'Mohon tunggu sebentar',
+                    allowOutsideClick: false,
+                    showConfirmButton: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
+
+                let formData = {
+                    title: this.eventTitle,
+                    room_id: this.eventRoomId,
+                    participants: this.eventParticipants,
+                    start: this.eventStartDate,
+                    end: this.eventEndDate,
                 };
-                window.dispatchEvent(new CustomEvent('save-calendar-event', { detail }));
+
+                let token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+                fetch('{{ route("guru.jadwal.store") }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': token
+                    },
+                    body: JSON.stringify(formData)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error || data.errors) {
+                        let msg = data.error || Object.values(data.errors).join('\n');
+                        Swal.close();
+
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Gagal',
+                            text: msg
+                        });
+                    } else {
+                        Swal.close();
+
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Berhasil',
+                            text: data.success || 'Booking berhasil diajukan!',
+                            timer: 2000,
+                            showConfirmButton: false
+                        });
+                        
+                        const detail = {
+                            id: data.booking.id,
+                            title: formData.title,
+                            start: formData.start,
+                            end: formData.end,
+                            level: this.eventLevel,
+                            roomId: formData.room_id,
+                            participants: formData.participants,
+                            mode: this.modalMode
+                        };
+                        window.dispatchEvent(new CustomEvent('save-calendar-event', { detail }));
+                        this.closeModal();
+                    }
+                })
+                .catch(error => {
+                    Swal.close();
+
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Terjadi kesalahan sistem.'
+                    });
+                })
+                .finally(() => {
+                    this.isSubmitting = false;
+                }); 
+            },
+
+            deleteEvent() {
+                if(this.selectedEventId) {
+                    window.dispatchEvent(new CustomEvent('delete-calendar-event', { detail: { id: this.selectedEventId } }));
+                }
                 this.closeModal();
             }
-        })
-        .catch(error => {
-            Swal.fire({icon: 'error', title: 'Error', text: 'Terjadi kesalahan sistem.'});
-        });
-    },
+        }));
+    });
+</script>
 
-    deleteEvent() {
-        if(this.selectedEventId) {
-            window.dispatchEvent(new CustomEvent('delete-calendar-event', { detail: { id: this.selectedEventId } }));
-        }
-        this.closeModal();
-    }
-}" 
+<div x-data="calendarData" 
 @open-calendar-modal.window="openModal($event.detail.mode, $event.detail.start, $event.detail.end, $event.detail.title, $event.detail.roomId, $event.detail.participants, $event.detail.id)">
 
     <div class="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
@@ -129,11 +168,14 @@
         <nav>
             <ol class="flex items-center gap-2">
                 <li>
-                    <a class="font-medium hover:text-brand-500" href="{{ route('admin.dashboard') }}">Dashboard /</a>
+                    <a class="font-medium hover:text-brand-500" href="{{ route('guru.dashboard') }}">Dashboard /</a>
                 </li>
                 <li class="font-medium text-brand-500">Jadwal Ruangan</li>
             </ol>
         </nav>
+    </div>
+    <div class="bg-blue-50 border border-blue-200 text-blue-700 px-4 py-3 rounded-lg mb-4">
+        Klik tanggal pada kalender untuk membuat booking ruangan baru.
     </div>
 
     <!-- Calendar Card -->
@@ -209,8 +251,32 @@
                 <button @click="closeModal()" class="flex w-full sm:w-auto justify-center rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400">
                     <span x-text="modalMode === 'edit' ? 'Tutup' : 'Batal'"></span>
                 </button>
-                <button x-show="modalMode === 'add'" @click="saveEvent()" class="flex w-full sm:w-auto justify-center rounded-lg bg-brand-500 px-4 py-2.5 text-sm font-medium text-white hover:bg-brand-600">
-                    <span>Buat Booking</span>
+                <button x-show="modalMode === 'add'" @click="saveEvent()" :disabled="isSubmitting" class="flex w-full sm:w-auto justify-center rounded-lg bg-brand-500 px-4 py-2.5 text-sm font-medium text-white hover:bg-brand-600">
+                    <span x-show="!isSubmitting">
+                        Buat Booking
+                    </span>
+
+                    <span x-show="isSubmitting" class="flex items-center gap-2">
+                        <svg class="animate-spin h-4 w-4"
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24">
+                            <circle
+                                class="opacity-25"
+                                cx="12"
+                                cy="12"
+                                r="10"
+                                stroke="currentColor"
+                                stroke-width="4">
+                            </circle>
+                            <path
+                                class="opacity-75"
+                                fill="currentColor"
+                                d="M4 12a8 8 0 018-8v8z">
+                            </path>
+                        </svg>
+                        Mengirim...
+                    </span>
                 </button>
             </div>
         </div>
@@ -264,8 +330,17 @@
                     selectable: true,
                     selectMirror: true,
                     dayMaxEvents: true,
+                    moreLinkContent(arg) {
+                        return {
+                            html: `
+                                <span class="fc-custom-more">
+                                    +${arg.num} Booking
+                                </span>
+                            `
+                        };
+            },
                     eventContent: renderEventContent,
-                    events: '{{ route("calendar.events") }}',
+                    events: '{{ route("guru.jadwal.events") }}',
 
                     select: function(info) {
                         // When selecting on dayGridMonth, fullcalendar might just provide dates.
@@ -378,5 +453,25 @@
 .dark .fc-bg-success { background-color: rgba(34, 197, 94, 0.2) !important; color: #86efac !important; }
 .dark .fc-bg-warning { background-color: rgba(234, 179, 8, 0.2) !important; color: #fde047 !important; }
 .dark .fc-bg-error { background-color: rgba(239, 68, 68, 0.2) !important; color: #fca5a5 !important; }
+
+.fc-custom-more{
+    display:inline-block;
+    background:#2563eb;
+    color:white;
+    padding:4px 10px;
+    border-radius:999px;
+    font-size:11px;
+    font-weight:600;
+    cursor:pointer;
+    transition:all .2s ease;
+    margin-top:2px;
+}
+
+.fc-custom-more:hover{
+    transform:translateY(-1px);
+    box-shadow:0 4px 10px rgba(37,99,235,.3);
+}
+
 </style>
+
 @endsection

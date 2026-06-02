@@ -12,7 +12,12 @@ Route::get('/', function () {
 });
 
 Route::get('/dashboard', function () {
-    return redirect()->route('admin.dashboard');
+    if (auth()->user()->isAdmin()) {
+        return redirect()->route('admin.dashboard');
+    } elseif (auth()->user()->isGuru()) {
+        return redirect()->route('guru.dashboard');
+    }
+    abort(403);
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::prefix('admin')
@@ -35,9 +40,9 @@ Route::prefix('admin')
         Route::patch('/reset/{booking}', [ResetBookingController::class, 'reset'])
             ->name('reset.booking');
 
-        Route::get('/calendar', function () {
-            return view('admin.calendar');
-        })->name('calendar');
+        Route::get('/calendar', [\App\Http\Controllers\Admin\CalendarController::class, 'index'])->name('calendar');
+        Route::get('/calendar/events', [\App\Http\Controllers\Admin\CalendarController::class, 'getEvents'])->name('calendar.events');
+        Route::post('/calendar/booking', [\App\Http\Controllers\Admin\CalendarController::class, 'store'])->name('calendar.store');
 
         Route::get('/reports', [\App\Http\Controllers\Admin\ReportController::class, 'index'])->name('reports.index');
 
@@ -46,6 +51,22 @@ Route::prefix('admin')
 
         Route::resource('rooms', \App\Http\Controllers\Admin\RoomManagementController::class)->except(['show', 'destroy']);
         Route::patch('/rooms/{room}/toggle-status', [\App\Http\Controllers\Admin\RoomManagementController::class, 'toggleStatus'])->name('rooms.toggle-status');
+    });
+
+Route::prefix('guru')
+    ->name('guru.')
+    ->middleware(['auth', 'guru'])
+    ->group(function () {
+        Route::get('/dashboard', [\App\Http\Controllers\Guru\DashboardController::class, 'index'])
+            ->name('dashboard');
+        
+        // Dummy routes for the sidebar menus for now
+        Route::get('/jadwal', [\App\Http\Controllers\Guru\JadwalController::class, 'index'])->name('jadwal');
+        Route::get('/jadwal/events', [\App\Http\Controllers\Guru\JadwalController::class, 'getEvents'])->name('jadwal.events');
+        Route::post('/jadwal/booking', [\App\Http\Controllers\Guru\JadwalController::class, 'store'])->name('jadwal.store');
+        Route::get('/booking/riwayat', function () { return "Riwayat Booking"; })->name('booking.riwayat');
+        Route::get('/booking/buat', function () { return "Buat Booking Baru"; })->name('booking.buat');
+        Route::get('/booking/status', function () { return "Status Booking"; })->name('booking.status');
     });
 
 Route::middleware('auth')->group(function () {
