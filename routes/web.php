@@ -66,7 +66,7 @@ Route::prefix('guru')
         Route::post('/jadwal/booking', [\App\Http\Controllers\Guru\JadwalController::class, 'store'])->name('jadwal.store');
         Route::get('/booking/riwayat', function () { return "Riwayat Booking"; })->name('booking.riwayat');
         Route::get('/booking/buat', function () { return "Buat Booking Baru"; })->name('booking.buat');
-        Route::get('/booking/status', function () { return "Status Booking"; })->name('booking.status');
+        Route::get('/booking/status', [\App\Http\Controllers\Guru\StatusBookingController::class, 'index'])->name('booking.status');
     });
 
 Route::middleware('auth')->group(function () {
