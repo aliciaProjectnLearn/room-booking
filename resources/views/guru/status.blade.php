@@ -25,7 +25,7 @@
 </div>
 
 {{-- Summary Card --}}
-<div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 mb-6">
+<div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
 
     {{-- Menunggu Verifikasi --}}
     <div class="bg-white border border-gray-200 rounded-xl p-4 shadow-sm">
