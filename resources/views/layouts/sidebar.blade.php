@@ -63,6 +63,9 @@
                     x-transition:enter-end="opacity-100">...</span>
             </h2>
             <ul class="flex flex-col gap-4">
+              
+              @if(auth()->user()->isAdmin())
+              <!-- ADMIN MENUS -->
               <!-- Dashboard -->
               <li>
                 <a href="{{ route('admin.dashboard') }}"
@@ -138,9 +141,110 @@
                         class="menu-item-text whitespace-nowrap ml-3">Calendar</span>
                 </a>
               </li>
+              @endif
+
+              @if(auth()->user()->isGuru())
+              <!-- GURU MENUS -->
+              <!-- Dashboard -->
+              <li>
+                <a href="{{ route('guru.dashboard') }}"
+                  class="menu-item group {{ request()->routeIs('guru.dashboard') ? 'menu-item-active' : 'menu-item-inactive' }} flex items-center overflow-hidden"
+                  :class="!(sidebarExpanded || sidebarHovered || mobileSidebarOpen) ? 'lg:justify-center lg:!px-0' : ''"
+                >
+                  <span class="shrink-0 {{ request()->routeIs('guru.dashboard') ? 'menu-item-icon-active' : 'menu-item-icon-inactive' }}">
+                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+                    </svg>
+                  </span>
+                  <span x-show="sidebarExpanded || sidebarHovered || mobileSidebarOpen" 
+                        x-transition:enter="transition ease-out duration-300"
+                        x-transition:enter-start="opacity-0 -translate-x-4"
+                        x-transition:enter-end="opacity-100 translate-x-0"
+                        class="menu-item-text whitespace-nowrap ml-3">Dashboard</span>
+                </a>
+              </li>
+
+              <!-- Jadwal Ruangan -->
+              <li>
+                <a href="{{ route('guru.jadwal') }}"
+                  class="menu-item group {{ request()->routeIs('guru.jadwal') ? 'menu-item-active' : 'menu-item-inactive' }} flex items-center overflow-hidden"
+                  :class="!(sidebarExpanded || sidebarHovered || mobileSidebarOpen) ? 'lg:justify-center lg:!px-0' : ''"
+                >
+                  <span class="shrink-0 {{ request()->routeIs('guru.jadwal') ? 'menu-item-icon-active' : 'menu-item-icon-inactive' }}">
+                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                  </span>
+                  <span x-show="sidebarExpanded || sidebarHovered || mobileSidebarOpen" 
+                        x-transition:enter="transition ease-out duration-300"
+                        x-transition:enter-start="opacity-0 -translate-x-4"
+                        x-transition:enter-end="opacity-100 translate-x-0"
+                        class="menu-item-text whitespace-nowrap ml-3">Jadwal Ruangan</span>
+                </a>
+              </li>
+
+              <!-- Buat Booking -->
+              <li>
+                <a href="{{ route('guru.booking.buat') }}"
+                  class="menu-item group {{ request()->routeIs('guru.booking.buat') ? 'menu-item-active' : 'menu-item-inactive' }} flex items-center overflow-hidden"
+                  :class="!(sidebarExpanded || sidebarHovered || mobileSidebarOpen) ? 'lg:justify-center lg:!px-0' : ''"
+                >
+                  <span class="shrink-0 {{ request()->routeIs('guru.booking.buat') ? 'menu-item-icon-active' : 'menu-item-icon-inactive' }}">
+                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                    </svg>
+                  </span>
+                  <span x-show="sidebarExpanded || sidebarHovered || mobileSidebarOpen" 
+                        x-transition:enter="transition ease-out duration-300"
+                        x-transition:enter-start="opacity-0 -translate-x-4"
+                        x-transition:enter-end="opacity-100 translate-x-0"
+                        class="menu-item-text whitespace-nowrap ml-3">Buat Booking Baru</span>
+                </a>
+              </li>
+
+              <!-- Status Booking -->
+              <li>
+                <a href="{{ route('guru.booking.status') }}"
+                  class="menu-item group {{ request()->routeIs('guru.booking.status') ? 'menu-item-active' : 'menu-item-inactive' }} flex items-center overflow-hidden"
+                  :class="!(sidebarExpanded || sidebarHovered || mobileSidebarOpen) ? 'lg:justify-center lg:!px-0' : ''"
+                >
+                  <span class="shrink-0 {{ request()->routeIs('guru.booking.status') ? 'menu-item-icon-active' : 'menu-item-icon-inactive' }}">
+                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                  </span>
+                  <span x-show="sidebarExpanded || sidebarHovered || mobileSidebarOpen" 
+                        x-transition:enter="transition ease-out duration-300"
+                        x-transition:enter-start="opacity-0 -translate-x-4"
+                        x-transition:enter-end="opacity-100 translate-x-0"
+                        class="menu-item-text whitespace-nowrap ml-3">Status Booking</span>
+                </a>
+              </li>
+
+              <!-- Riwayat Booking -->
+              <li>
+                <a href="{{ route('guru.booking.riwayat') }}"
+                  class="menu-item group {{ request()->routeIs('guru.booking.riwayat') ? 'menu-item-active' : 'menu-item-inactive' }} flex items-center overflow-hidden"
+                  :class="!(sidebarExpanded || sidebarHovered || mobileSidebarOpen) ? 'lg:justify-center lg:!px-0' : ''"
+                >
+                  <span class="shrink-0 {{ request()->routeIs('guru.booking.riwayat') ? 'menu-item-icon-active' : 'menu-item-icon-inactive' }}">
+                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                  </span>
+                  <span x-show="sidebarExpanded || sidebarHovered || mobileSidebarOpen" 
+                        x-transition:enter="transition ease-out duration-300"
+                        x-transition:enter-start="opacity-0 -translate-x-4"
+                        x-transition:enter-end="opacity-100 translate-x-0"
+                        class="menu-item-text whitespace-nowrap ml-3">Riwayat Booking</span>
+                </a>
+              </li>
+              @endif
+
             </ul>
           </div>
           
+          @if(auth()->user()->isAdmin())
           <!-- Laporan Group -->
           <div class="mt-4">
             <h2
@@ -216,6 +320,7 @@
               </li>
             </ul>
           </div>
+          @endif
         </div>
       </nav>
     </div>
