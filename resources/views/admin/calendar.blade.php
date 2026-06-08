@@ -75,9 +75,9 @@
             end: this.eventEndDate,
         };
 
-        let token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+        let token = document.querySelector('meta[name=csrf-token]').getAttribute('content');
 
-        fetch('{{ route("calendar.store") }}', {
+        fetch('{{ route('admin.calendar.store') }}', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -265,7 +265,7 @@
                     selectMirror: true,
                     dayMaxEvents: true,
                     eventContent: renderEventContent,
-                    events: '{{ route("calendar.events") }}',
+                    events: '{{ route("admin.calendar.events") }}',
 
                     select: function(info) {
                         // When selecting on dayGridMonth, fullcalendar might just provide dates.

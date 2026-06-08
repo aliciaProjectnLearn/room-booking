@@ -21,6 +21,13 @@
         </p>
     @endif
 
+    @php
+        $groupedBookings = $bookings->groupBy('status');
+        $roomBookingsCount = $bookings->groupBy('room.name')->map->count();
+    @endphp
+
+    @foreach($groupedBookings as $status => $statusBookings)
+    <h3 style="margin-top: 20px; text-transform: capitalize; color: #333;">Status: {{ $status }}</h3>
     <table>
         <thead>
             <tr>
@@ -30,12 +37,11 @@
                 <th>Kegiatan</th>
                 <th>Peserta</th>
                 <th>Waktu Penggunaan</th>
-                <th>Status</th>
                 <th>Verifikator</th>
             </tr>
         </thead>
         <tbody>
-            @foreach($bookings as $index => $booking)
+            @foreach($statusBookings as $index => $booking)
             <tr>
                 <td>{{ $index + 1 }}</td>
                 <td>{{ $booking->user->name }}</td>
@@ -46,7 +52,6 @@
                     {{ $booking->start_time->format('d/m/Y') }}<br>
                     {{ $booking->start_time->format('H:i') }} - {{ $booking->end_time->format('H:i') }}
                 </td>
-                <td>{{ ucfirst($booking->status) }}</td>
                 <td>
                     {{ $booking->verifier ? $booking->verifier->name : '-' }}<br>
                     <small>{{ $booking->verified_at ? $booking->verified_at->format('d/m/Y') : '' }}</small>
@@ -55,5 +60,26 @@
             @endforeach
         </tbody>
     </table>
+    @endforeach
+
+    <div style="margin-top: 30px; page-break-inside: avoid;">
+        <h3 style="color: #333;">Total Booking Tiap Ruangan</h3>
+        <table style="width: 60%;">
+            <thead>
+                <tr>
+                    <th>Ruangan</th>
+                    <th>Total Booking</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach($roomBookingsCount as $roomName => $count)
+                <tr>
+                    <td>{{ $roomName }}</td>
+                    <td>{{ $count }}</td>
+                </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
 </body>
 </html>
