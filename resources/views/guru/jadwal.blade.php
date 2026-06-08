@@ -343,6 +343,20 @@
                     events: '{{ route("guru.jadwal.events") }}',
 
                     select: function(info) {
+                        let today = new Date();
+                        today.setHours(0,0,0,0);
+                        let selectedDate = new Date(info.startStr.split('T')[0]);
+
+                        if (selectedDate < today) {
+                            Swal.fire({
+                                icon: 'warning', 
+                                title: 'Tanggal Tidak Valid', 
+                                text: 'Anda tidak dapat membuat booking ruangan pada tanggal ini, karena tanggal sudah terlewat.'
+                            });
+                            calendar.unselect();
+                            return;
+                        }
+
                         // When selecting on dayGridMonth, fullcalendar might just provide dates.
                         // We can provide a time to make it datetime-local friendly.
                         let start = info.startStr.includes('T') ? info.startStr : info.startStr + 'T08:00';

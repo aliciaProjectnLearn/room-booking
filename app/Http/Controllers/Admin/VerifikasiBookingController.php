@@ -80,7 +80,7 @@ class VerifikasiBookingController extends Controller
     }
 
     // Tolak booking
-    public function tolak(Booking $booking)
+    public function tolak(Booking $booking, \App\Services\WhatsAppService $waService)
     {
         // Pastikan booking masih pending
         if ($booking->status !== 'pending') {
@@ -92,6 +92,13 @@ class VerifikasiBookingController extends Controller
             'verified_by' => auth()->id(),
             'verified_at' => now(),
         ]);
+
+        // Send WhatsApp to Guru
+        if ($booking->user && $booking->user->phone_number) {
+            $guruPhone = $booking->user->phone_number;
+            $msgGuru = "Halo {$booking->user->name},\nMohon maaf, permohonan booking untuk ruang {$booking->room->name} pada " . $booking->start_time->format('d/m/Y H:i') . " telah DITOLAK oleh Admin.";
+            $waService->sendMessage($guruPhone, $msgGuru);
+        }
 
         return back()->with('success', 'Booking berhasil ditolak.');
     }
