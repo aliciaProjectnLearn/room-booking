@@ -11,6 +11,13 @@ class StatusBookingController extends Controller
     {
         $bookings = Booking::with('room')
             ->where('user_id', auth()->id())
+            ->where(function($query) {
+                $query->whereIn('status', ['pending', 'approved'])
+                      ->orWhere(function($q) {
+                          $q->where('status', 'rejected')
+                            ->where('updated_at', '>=', now()->subMinutes(30));
+                      });
+            })
             ->latest()
             ->paginate(10);
 

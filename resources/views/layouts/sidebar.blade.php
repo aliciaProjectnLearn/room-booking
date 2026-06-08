@@ -223,11 +223,11 @@
 
               <!-- Riwayat Booking -->
               <li>
-                <a href="{{ route('guru.booking.riwayat') }}"
-                  class="menu-item group {{ request()->routeIs('guru.booking.riwayat') ? 'menu-item-active' : 'menu-item-inactive' }} flex items-center overflow-hidden"
+                <a href="{{ route('guru.booking.history') }}"
+                  class="menu-item group {{ request()->routeIs('guru.booking.history') ? 'menu-item-active' : 'menu-item-inactive' }} flex items-center overflow-hidden"
                   :class="!(sidebarExpanded || sidebarHovered || mobileSidebarOpen) ? 'lg:justify-center lg:!px-0' : ''"
                 >
-                  <span class="shrink-0 {{ request()->routeIs('guru.booking.riwayat') ? 'menu-item-icon-active' : 'menu-item-icon-inactive' }}">
+                  <span class="shrink-0 {{ request()->routeIs('guru.booking.history') ? 'menu-item-icon-active' : 'menu-item-icon-inactive' }}">
                     <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>

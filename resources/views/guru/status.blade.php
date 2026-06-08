@@ -238,6 +238,17 @@
                             {{ $booking->created_at->format('d M Y H:i') }}
                         </div>
 
+                        @if($booking->status == 'pending')
+                            <form id="cancel-form-{{ $booking->id }}" action="{{ route('guru.booking.cancel', $booking->id) }}" method="POST" class="mt-4">
+                                @csrf
+                                @method('PATCH')
+                                <button type="button" onclick="confirmCancel({{ $booking->id }})" class="inline-flex items-center gap-2 rounded-lg bg-white border border-gray-300 px-3 py-1.5 text-xs font-semibold text-gray-700 hover:bg-gray-50 transition-colors shadow-sm">
+                                    <svg class="w-3.5 h-3.5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                                    Batalkan
+                                </button>
+                            </form>
+                        @endif
+
                     </div>
 
                 </div>
@@ -325,4 +336,22 @@
 </div>
 @endif
 
+<script>
+function confirmCancel(id) {
+    Swal.fire({
+        title: 'Batalkan Booking?',
+        text: "Anda yakin ingin membatalkan pengajuan booking ini?",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Ya, Batalkan!',
+        cancelButtonText: 'Tutup'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            document.getElementById('cancel-form-' + id).submit();
+        }
+    })
+}
+</script>
 @endsection

@@ -64,12 +64,16 @@ Route::prefix('guru')
         Route::get('/jadwal', [\App\Http\Controllers\Guru\JadwalController::class, 'index'])->name('jadwal');
         Route::get('/jadwal/events', [\App\Http\Controllers\Guru\JadwalController::class, 'getEvents'])->name('jadwal.events');
         Route::post('/jadwal/booking', [\App\Http\Controllers\Guru\JadwalController::class, 'store'])->name('jadwal.store');
-        Route::get('/booking/riwayat', function () { return "Riwayat Booking"; })->name('booking.riwayat');
-        Route::get('/booking/buat', function () { return "Buat Booking Baru"; })->name('booking.buat');
+        Route::get('/booking/buat', [\App\Http\Controllers\Guru\BookingController::class, 'create'])->name('booking.buat');
+        Route::post('/booking/buat', [\App\Http\Controllers\Guru\BookingController::class, 'store'])->name('booking.store');
+        Route::patch('/booking/{booking}/cancel', [\App\Http\Controllers\Guru\BookingController::class, 'cancel'])->name('booking.cancel');
         Route::get('/booking/status', [\App\Http\Controllers\Guru\StatusBookingController::class, 'index'])->name('booking.status');
+        Route::get('/booking/history', [\App\Http\Controllers\Guru\HistoryController::class, 'index'])->name('booking.history');
+        Route::get('/booking/{booking}', function() { return "Detail Booking"; })->name('booking.show'); 
     });
 
 Route::middleware('auth')->group(function () {
+
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');

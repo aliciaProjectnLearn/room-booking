@@ -25,11 +25,10 @@ class DashboardController extends Controller
         // Total booking menunggu verifikasi
         $bookingPending = Booking::pending()->count();
 
-        // Daftar booking hari ini beserta relasi user & ruangan
-        $jadwalHariIni = Booking::with(['user', 'room'])
-            ->whereDate('start_time', today())
-            ->where('status', 'approved')
-            ->orderBy('start_time')
+        // Daftar booking yang direquest hari ini
+        $requestHariIni = Booking::with(['user', 'room'])
+            ->whereDate('created_at', today())
+            ->orderBy('created_at', 'desc')
             ->get();
 
         // Booking per ruangan bulan ini (untuk grafik)
@@ -46,7 +45,7 @@ class DashboardController extends Controller
             'ruanganAktif',
             'bookingHariIni',
             'bookingPending',
-            'jadwalHariIni',
+            'requestHariIni',
             'bookingPerRuangan'
         ));
     }

@@ -30,13 +30,13 @@
     </div>
 </div>
 
-{{-- Jadwal Hari Ini --}}
+{{-- Request Booking Hari Ini --}}
 <div class="bg-white rounded-xl shadow p-6 mb-8">
     <h2 class="text-lg font-semibold text-gray-700 mb-4">
-        Jadwal Hari Ini — {{ now()->translatedFormat('l, d F Y') }}
+        Request Booking Hari Ini — {{ now()->translatedFormat('l, d F Y') }}
     </h2>
-    @if($jadwalHariIni->isEmpty())
-        <p class="text-gray-400 text-sm">Tidak ada booking yang disetujui untuk hari ini.</p>
+    @if($requestHariIni->isEmpty())
+        <p class="text-gray-400 text-sm">Tidak ada request booking untuk hari ini.</p>
     @else
         <div class="overflow-x-auto">
             <table class="w-full text-sm text-left">
@@ -45,18 +45,24 @@
                         <th class="px-4 py-3">Ruangan</th>
                         <th class="px-4 py-3">Kegiatan</th>
                         <th class="px-4 py-3">Pemohon</th>
-                        <th class="px-4 py-3">Waktu</th>
+                        <th class="px-4 py-3">Waktu Mulai</th>
+                        <th class="px-4 py-3">Waktu Selesai</th>
+                        <th class="px-4 py-3">Status</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-100">
-                    @foreach($jadwalHariIni as $booking)
+                    @foreach($requestHariIni as $booking)
                     <tr class="hover:bg-gray-50">
                         <td class="px-4 py-3 font-medium">{{ $booking->room->name }}</td>
                         <td class="px-4 py-3">{{ $booking->activity_name }}</td>
                         <td class="px-4 py-3">{{ $booking->user->name }}</td>
+                        <td class="px-4 py-3">{{ $booking->start_time->format('H:i') }}</td>
+                        <td class="px-4 py-3">{{ $booking->end_time->format('H:i') }}</td>
                         <td class="px-4 py-3">
-                            {{ $booking->start_time->format('H:i') }} –
-                            {{ $booking->end_time->format('H:i') }}
+                            <span class="px-2 py-1 text-xs rounded-full 
+                                {{ $booking->status == 'approved' ? 'bg-green-100 text-green-700' : ($booking->status == 'pending' ? 'bg-yellow-100 text-yellow-700' : ($booking->status == 'rejected' ? 'bg-red-100 text-red-700' : 'bg-gray-100 text-gray-700')) }}">
+                                {{ ucfirst($booking->status) }}
+                            </span>
                         </td>
                     </tr>
                     @endforeach
